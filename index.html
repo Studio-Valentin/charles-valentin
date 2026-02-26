@@ -19,7 +19,7 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    fontFamily: { sans: ['Helvetica Neue', 'sans-serif'] },
                     colors: { accent: '#e0ff00', borderDark: '#333' }
                 }
             }
@@ -86,7 +86,7 @@
                 ]
             },
             raccordement: { 
-                title: "Portail Raccord.", year: "2024", tags: "Service Design", 
+                title: "EDF Raccordement", year: "2024", tags: "Service Design", 
                 headerTags: "Service Design • 2024", 
                 context: "Digitalisation du processus de raccordement à l'électricité pour des consommateurs et producteurs.", 
                 approach: "Simplification B2B/B2C.", 
@@ -108,7 +108,7 @@
                 ]
             },
             typix: { 
-                title: "Typix", year: "2023", tags: "App Métier", 
+                title: "Pixalione", year: "2023", tags: "App Métier", 
                 headerTags: "App Métier • 2023", 
                 context: "Application métier impliquant 4 profils utilisateurs.", 
                 approach: "Optimisation de l'architecture.", 
@@ -262,7 +262,7 @@
                                 type="submit" 
                                 className="mt-8 border-2 border-white py-6 px-12 text-2xl font-black uppercase tracking-tighter hover:bg-white hover:text-black transition-colors md:self-end"
                             >
-                                ENVOYER LE MESSAGE
+                                ENVOYER
                             </button>
                         </form>
                     </footer>
@@ -297,7 +297,7 @@
             if (!project) return null;
 
             return (
-                <div ref={containerRef} className="min-h-screen bg-black pb-32">
+                <div ref={containerRef} className="min-h-screen bg-[#1C1C1C] pb-32">
                     <button onClick={onClose} className="sticky top-0 z-50 mix-blend-difference bg-transparent text-white font-black uppercase text-xl p-6 md:p-10 hover:text-accent transition-colors flex items-center gap-4">
                         <span>←</span> RETOUR
                     </button>
@@ -309,7 +309,7 @@
 
                     {/* Image Cover */}
                     {project.images && project.images[0] && (
-                        <div className="p-6 md:p-12 border-b border-borderDark bg-[#0a0a0a] overflow-hidden">
+                        <div className="p-6 md:p-12 border-b border-borderDark bg-[#1C1C1C] overflow-hidden">
                             <img src={project.images[0]} alt={project.title} className="w-full border border-borderDark proj-img" />
                         </div>
                     )}
@@ -329,13 +329,13 @@
                     {/* Reste des images intercalées avec les descriptions */}
                     {project.images && project.images.slice(1).map((imgSrc, index) => (
                         <React.Fragment key={index}>
-                            <div className="p-6 md:p-12 border-b border-borderDark bg-[#0a0a0a] overflow-hidden">
+                            <div className="p-6 md:p-12 border-b border-borderDark bg-[#1C1C1C] overflow-hidden">
                                 <img src={imgSrc} alt={`${project.title} aperçu ${index + 1}`} className="w-full border border-borderDark bg-white proj-img" />
                             </div>
                             
                             {/* Paragraphe optionnel sous l'image */}
                             {project.descriptions && project.descriptions[index] && (
-                                <div className="p-8 md:p-16 border-b border-borderDark bg-black proj-reveal flex justify-center">
+                                <div className="p-8 md:p-16 border-b border-borderDark bg-[#1C1C1C] proj-reveal flex justify-center">
                                     <p className="text-lg md:text-2xl font-medium text-neutral-300 leading-relaxed max-w-4xl text-center">
                                         {project.descriptions[index]}
                                     </p>
