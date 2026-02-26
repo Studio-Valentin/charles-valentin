@@ -3,190 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Charles Valentin — UX/UI React (Pure CSS)</title>
+    <title>Charles Valentin — UX/UI React</title>
 
     <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
     
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: { accent: '#e0ff00', borderDark: '#333' }
+                }
+            }
+        }
+    </script>
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;800;900&display=swap" rel="stylesheet">
 
     <style>
-        /* ==========================================================================
-           1. VARIABLES (COLOR SWATCH & TYPOGRAPHY BASE)
-           Les variables CSS (Custom Properties) permettent de définir une valeur 
-           une seule fois et de la réutiliser. Si tu veux changer l'identité 
-           visuelle, tu n'as qu'à modifier ces lignes.
-           ========================================================================== */
-        :root {
-            /* --- Palette de couleurs (Color Swatch) --- */
-            --color-bg-main: #1C1C1C;      /* Fond principal du site (Gris très foncé) */
-            --color-bg-card: #0a0a0a;      /* Fond pour faire ressortir les images */
-            --color-text-main: #ffffff;    /* Texte principal (Blanc) */
-            --color-text-muted: #a3a3a3;   /* Texte secondaire/neutre (Gris clair) */
-            --color-text-dark: #000000;    /* Texte inversé (ex: texte sur le survol jaune) */
-            --color-accent: #e0ff00;       /* Couleur d'accentuation (Jaune fluo brutaliste) */
-            --color-border: #333333;       /* Couleur des lignes de séparation */
-
-            /* --- Typographie --- */
-            --font-family-sans: 'Inter', sans-serif;
-            
-            /* --- Espacements standards --- */
-            --spacing-sm: 1rem;            /* 16px */
-            --spacing-md: 2rem;            /* 32px */
-            --spacing-lg: 4rem;            /* 64px */
-            --spacing-xl: 6rem;            /* 96px */
-        }
-
-        /* ==========================================================================
-           2. RESET & GLOBAL STYLES
-           Réinitialisation des marges par défaut des navigateurs pour un rendu uni.
-           ========================================================================== */
-        *, *::before, *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            background-color: var(--color-bg-main);
-            color: var(--color-text-main);
-            font-family: var(--font-family-sans);
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        /* Personnalisation de la sélection de texte globale */
-        ::selection {
-            background-color: var(--color-accent);
-            color: var(--color-text-dark);
-        }
-
-        /* ==========================================================================
-           3. LAYOUT & STRUCTURE
-           Classes sémantiques remplaçant l'approche utilitaire de Tailwind.
-           ========================================================================== */
+        body { background-color: #1C1C1C; color: #fff; overflow-x: hidden; }
         
-        /* --- Navigation --- */
-        .site-nav {
-            display: flex;
-            justify-content: space-between;
-            padding: var(--spacing-sm) var(--spacing-sm);
-            font-size: 0.75rem;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            border-bottom: 1px solid var(--color-border);
-        }
+        /* Marquee infini fluide */
+        .marquee-container { overflow: hidden; white-space: nowrap; }
+        .marquee-content { display: inline-block; animation: marquee 15s linear infinite; }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .text-outline { color: transparent; -webkit-text-stroke: 2px #fff; }
 
-        /* --- En-tête (Marquee) --- */
-        .marquee-header {
-            border-bottom: 1px solid var(--color-border);
-            padding: var(--spacing-lg) 0;
-            overflow: hidden;
-            white-space: nowrap;
-        }
-        .marquee-content {
-            display: inline-block;
-            animation: marquee 15s linear infinite;
-        }
-        @keyframes marquee { 
-            0% { transform: translateX(0); } 
-            100% { transform: translateX(-50%); } 
-        }
-        .marquee-text {
-            font-size: 12vw; /* Taille de police adaptative relative à la largeur d'écran */
-            font-weight: 900;
-            text-transform: uppercase;
-            line-height: 0.8;
-            letter-spacing: -0.05em;
-            padding-right: var(--spacing-md);
-        }
-        .text-outline {
-            color: transparent;
-            -webkit-text-stroke: 2px var(--color-text-main);
-        }
-
-        /* --- Section Mission --- */
-        .mission-section {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: var(--spacing-md);
-            padding: var(--spacing-md);
-            border-bottom: 1px solid var(--color-border);
-        }
-        .mission-label {
-            font-size: 0.875rem;
-            color: var(--color-text-muted);
-            text-transform: uppercase;
-            font-weight: 500;
-        }
-        .mission-text {
-            font-size: 1.5rem;
-            font-weight: 500;
-            line-height: 1.2;
-            letter-spacing: -0.02em;
-        }
-        .text-accent {
-            color: var(--color-accent);
-        }
-
-        /* --- Liste des Projets (Row) --- */
-        .project-row {
-            position: relative;
-            border-bottom: 1px solid var(--color-border);
-            cursor: pointer;
-            overflow: hidden; /* Empêche l'animation de fond de déborder */
-        }
-        /* Effet de remplissage de bas en haut au survol */
+        /* Effet de survol brutaliste global de la ligne */
+        .project-row { position: relative; overflow: hidden; }
         .project-row::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background-color: var(--color-text-main);
-            transform: scaleY(0);
-            transform-origin: bottom;
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            z-index: 0;
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #fff; transform: scaleY(0); transform-origin: bottom;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); z-index: 0;
         }
-        .project-row:hover::before {
-            transform: scaleY(1);
-            transform-origin: top;
-        }
-        .project-row-content {
-            position: relative;
-            z-index: 1; /* Reste au-dessus de l'animation de fond */
-            display: flex;
-            flex-direction: column;
-            gap: var(--spacing-sm);
-            padding: var(--spacing-md);
-            transition: transform 0.4s ease, color 0.4s ease;
-        }
-        .project-row:hover .project-row-content {
-            transform: translateX(2vw); /* Décale légèrement le texte vers la droite */
-            color: var(--color-text-dark);
-        }
-        .project-title {
-            font-size: 2.25rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: -0.05em;
-            line-height: 1;
-            perspective: 1000px; /* Nécessaire pour l'animation 3D GSAP */
-        }
-        .project-meta {
-            font-size: 0.875rem;
-            font-weight: 500;
-            text-transform: uppercase;
-            color: var(--color-text-muted);
-        }
-        .project-row:hover .project-meta {
-            color: var(--color-text-dark); /* Assure la lisibilité au survol */
+        .project-row:hover::before { transform: scaleY(1); transform-origin: top; }
+        .project-row-content { position: relative; z-index: 1; transition: transform 0.4s ease; }
+        .project-row:hover .project-row-content { transform: translateX(2vw); color: #000; }
+
+        /* Utilitaires pour l'animation 3D des lettres */
+        .project-title-wrapper {
+            perspective: 1000px;
         }
         .char {
             display: inline-block;
@@ -194,235 +58,10 @@
             transform-origin: center center;
             white-space: pre;
         }
-
-        /* --- Formulaire de Contact --- */
-        .contact-footer {
-            padding: var(--spacing-xl) var(--spacing-md);
-            max-w-width: 1024px;
-            margin: 0 auto;
-        }
-        .contact-title {
-            font-size: 10vw;
-            font-weight: 900;
-            text-transform: uppercase;
-            line-height: 0.85;
-            letter-spacing: -0.05em;
-            text-align: center;
-            margin-bottom: var(--spacing-lg);
-        }
-        .contact-form {
-            display: flex;
-            flex-direction: column;
-            gap: var(--spacing-lg);
-        }
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: var(--spacing-lg);
-        }
-        .form-input {
-            width: 100%;
-            background: transparent;
-            border: none;
-            border-bottom: 2px solid var(--color-border);
-            padding: var(--spacing-sm) 0;
-            font-size: 1.25rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            color: var(--color-text-main);
-            transition: border-color 0.3s ease;
-            font-family: inherit;
-        }
-        .form-input:focus {
-            outline: none;
-            border-color: var(--color-accent);
-        }
-        .form-input::placeholder {
-            color: #666; /* Spécifique pour le placeholder */
-        }
-        textarea.form-input {
-            resize: none;
-        }
-        .submit-btn {
-            background: transparent;
-            border: 2px solid var(--color-text-main);
-            color: var(--color-text-main);
-            padding: 1.5rem var(--spacing-lg);
-            font-size: 1.5rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: -0.05em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: var(--spacing-md);
-            font-family: inherit;
-        }
-        .submit-btn:hover {
-            background: var(--color-text-main);
-            color: var(--color-text-dark);
-        }
-
-        /* --- Vue Projet (Détail) --- */
-        .project-view-container {
-            min-height: 100vh;
-            background-color: var(--color-text-dark); /* Noir pur */
-            padding-bottom: var(--spacing-xl);
-        }
-        .btn-back {
-            position: sticky;
-            top: 0;
-            z-index: 50;
-            mix-blend-mode: difference;
-            background: transparent;
-            color: var(--color-text-main);
-            font-weight: 900;
-            text-transform: uppercase;
-            font-size: 1.25rem;
-            padding: var(--spacing-md);
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            transition: color 0.3s ease;
-            font-family: inherit;
-        }
-        .btn-back:hover {
-            color: var(--color-accent);
-        }
-
-        .project-detail-header {
-            padding: 0 var(--spacing-md) var(--spacing-lg) var(--spacing-md);
-            border-bottom: 1px solid var(--color-border);
-        }
-        .project-detail-title {
-            font-size: 12vw;
-            font-weight: 900;
-            text-transform: uppercase;
-            line-height: 0.85;
-            letter-spacing: -0.05em;
-            margin-bottom: var(--spacing-md);
-        }
-        .project-detail-tags {
-            font-size: 1.125rem;
-            font-weight: 500;
-            color: var(--color-text-muted);
-            text-transform: uppercase;
-        }
-
-        .project-img-wrapper {
-            padding: var(--spacing-md);
-            border-bottom: 1px solid var(--color-border);
-            background-color: var(--color-bg-card);
-            overflow: hidden; /* Prévient les débordements liés au GSAP scale */
-        }
-        .project-img-wrapper img {
-            width: 100%;
-            display: block;
-            border: 1px solid var(--color-border);
-            background-color: var(--color-text-main);
-        }
-
-        .project-context-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            border-bottom: 1px solid var(--color-border);
-        }
-        .context-block {
-            padding: var(--spacing-md);
-            border-bottom: 1px solid var(--color-border);
-        }
-        .context-block h3 {
-            font-size: 1.5rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            margin-bottom: var(--spacing-sm);
-        }
-        .context-block p {
-            font-size: 1.125rem;
-            color: var(--color-text-muted);
-            line-height: 1.6;
-        }
-
-        .project-desc-wrapper {
-            padding: var(--spacing-lg) var(--spacing-md);
-            border-bottom: 1px solid var(--color-border);
-            background-color: var(--color-text-dark); /* Noir pur */
-            display: flex;
-            justify-content: center;
-        }
-        .project-desc-wrapper p {
-            font-size: 1.125rem;
-            font-weight: 500;
-            color: #d4d4d4;
-            line-height: 1.6;
-            max-width: 56rem;
-            text-align: center;
-        }
-
-        /* ==========================================================================
-           4. MEDIA QUERIES (RESPONSIVE)
-           Équivalent aux préfixes md: et lg: de Tailwind CSS.
-           ========================================================================== */
-        @media (min-width: 768px) {
-            .site-nav {
-                padding: var(--spacing-md) var(--spacing-md);
-                font-size: 0.875rem;
-            }
-            .marquee-header {
-                padding: var(--spacing-xl) 0;
-            }
-            .mission-section {
-                grid-template-columns: 1fr 2fr;
-                padding: var(--spacing-lg);
-            }
-            .mission-text {
-                font-size: 3rem;
-            }
-            .project-row-content {
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-                padding: var(--spacing-lg);
-            }
-            .project-title {
-                font-size: 6vw;
-            }
-            .project-meta {
-                text-align: right;
-                font-size: 1rem;
-            }
-            
-            .form-grid {
-                grid-template-columns: 1fr 1fr; /* 2 colonnes pour les inputs texte */
-            }
-            .form-input {
-                font-size: 1.5rem;
-                padding: var(--spacing-sm) 0;
-            }
-            .submit-btn {
-                align-self: flex-end; /* Aligne le bouton de contact à droite sur grand écran */
-            }
-
-            .project-img-wrapper {
-                padding: var(--spacing-lg);
-            }
-            .project-context-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            .context-block {
-                padding: var(--spacing-lg);
-                border-bottom: none; /* Enlève la ligne de séparation verticale sur le grid 2 colonnes */
-            }
-            .context-block:first-child {
-                border-right: 1px solid var(--color-border); /* Séparation entre la colonne 1 et 2 */
-            }
-            .context-block p {
-                font-size: 1.25rem;
-            }
-            .project-desc-wrapper p {
-                font-size: 1.5rem;
-            }
+        
+        /* Style du placeholder personnalisé pour le formulaire */
+        ::placeholder {
+            color: #666;
         }
     </style>
 </head>
@@ -431,11 +70,9 @@
 
     <script type="text/babel">
         const { useState, useEffect, useLayoutEffect, useRef } = React;
-        
-        /* Les plugins GSAP doivent être enregistrés avant d'être utilisés */
         gsap.registerPlugin(ScrollTrigger);
 
-        // --- DONNÉES DES PROJETS ---
+        // --- DONNÉES DES PROJETS (Triés par ordre chronologique et ajout des paragraphes) ---
         const projectsData = {
             edf: {
                 title: "EDF Particulier", year: "2024", tags: "Refonte UX/UI",
@@ -499,12 +136,10 @@
 
             useLayoutEffect(() => {
                 const ctx = gsap.context(() => {
-                    // Animation d'entrée globale (Fade Up)
                     gsap.from(".gsap-fade-up", {
                         y: 100, opacity: 0, duration: 1, stagger: 0.1, ease: "power4.out", delay: 0.2
                     });
 
-                    // Révélation au scroll (ScrollTrigger) pour les lignes de projets
                     gsap.utils.toArray('.gsap-project-row').forEach((row) => {
                         gsap.from(row, {
                             scrollTrigger: {
@@ -514,10 +149,9 @@
                         });
                     });
                 }, containerRef);
-                return () => ctx.revert(); // Nettoyage au démontage du composant
+                return () => ctx.revert();
             }, []);
 
-            // Animations interactives 3D pour les lettres au survol
             const handleMouseEnter = (e) => {
                 const chars = e.currentTarget.querySelectorAll('.char');
                 gsap.to(chars, {
@@ -546,48 +180,48 @@
             };
 
             return (
-                <div ref={containerRef} style={{ paddingBottom: '5rem' }}>
-                    <nav className="site-nav gsap-fade-up">
+                <div ref={containerRef} className="pb-20">
+                    <nav className="flex justify-between p-4 md:p-8 text-xs md:text-sm font-medium uppercase tracking-widest border-b border-borderDark gsap-fade-up">
                         <div>Charles Valentin</div>
                         <div>Portfolio 22—25</div>
                     </nav>
 
-                    <header className="marquee-header gsap-fade-up">
-                        <div className="marquee-content">
-                            <span className="marquee-text">
+                    <header className="border-b border-borderDark py-10 md:py-20 marquee-container gsap-fade-up">
+                        <div className="marquee-content whitespace-nowrap">
+                            <span className="text-[12vw] font-black uppercase leading-[0.8] tracking-tighter pr-8">
                                 UX/UI DESIGNER <span className="text-outline">CREATIVE</span> DIGITAL
                             </span>
-                            <span className="marquee-text">
+                            <span className="text-[12vw] font-black uppercase leading-[0.8] tracking-tighter pr-8">
                                 UX/UI DESIGNER <span className="text-outline">CREATIVE</span> DIGITAL
                             </span>
                         </div>
                     </header>
 
-                    <section className="mission-section">
-                        <div className="mission-label gsap-fade-up">Mission</div>
-                        <div className="mission-text gsap-fade-up">
+                    <section className="grid grid-cols-1 md:grid-cols-3 gap-8 p-6 md:p-16 border-b border-borderDark">
+                        <div className="text-sm text-neutral-500 uppercase font-medium gsap-fade-up">Mission</div>
+                        <div className="md:col-span-2 text-2xl md:text-5xl font-medium leading-tight tracking-tight gsap-fade-up">
                             Je conçois des expériences digitales <span className="text-accent">innovantes</span>, fonctionnelles et centrées sur l'utilisateur. Transformer des problématiques complexes en interfaces évidentes.
                         </div>
                     </section>
 
-                    <main style={{ display: 'flex', flexDirection: 'column' }}>
+                    <main className="flex flex-col">
                         {Object.entries(projectsData).map(([id, project]) => (
                             <article 
                                 key={id} 
                                 onClick={() => onOpenProject(id)}
                                 onMouseEnter={handleMouseEnter}
                                 onMouseLeave={handleMouseLeave}
-                                className="project-row gsap-project-row"
+                                className="project-row border-b border-borderDark cursor-pointer gsap-project-row"
                             >
-                                <div className="project-row-content">
-                                    <h2 className="project-title">
+                                <div className="project-row-content flex flex-col md:flex-row justify-between md:items-center p-6 md:p-12 gap-4">
+                                    <h2 className="text-4xl md:text-[6vw] font-black uppercase tracking-tighter m-0 leading-none project-title-wrapper">
                                         {project.title.split('').map((char, index) => (
                                             <span key={index} className="char">
                                                 {char}
                                             </span>
                                         ))}
                                     </h2>
-                                    <div className="project-meta">
+                                    <div className="text-sm md:text-base font-medium uppercase text-left md:text-right text-neutral-400">
                                         {project.year}<br/>{project.tags}
                                     </div>
                                 </div>
@@ -596,24 +230,24 @@
                     </main>
 
                     {/* FOOTER & FORMULAIRE DE CONTACT */}
-                    <footer className="contact-footer">
-                        <h2 className="contact-title gsap-fade-up">
+                    <footer className="py-24 md:py-40 px-6 max-w-5xl mx-auto">
+                        <h2 className="text-[10vw] font-black uppercase leading-[0.85] tracking-tighter mb-16 text-center gsap-fade-up">
                             START A<br/><span className="text-accent">PROJECT.</span>
                         </h2>
                         
-                        <form onSubmit={handleFormSubmit} className="contact-form gsap-fade-up">
-                            <div className="form-grid">
+                        <form onSubmit={handleFormSubmit} className="flex flex-col gap-10 gsap-fade-up">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                                 <input 
                                     type="text" 
                                     placeholder="VOTRE NOM" 
                                     required 
-                                    className="form-input"
+                                    className="w-full bg-transparent border-b-2 border-borderDark py-4 text-xl md:text-2xl font-bold uppercase tracking-wide focus:outline-none focus:border-accent transition-colors"
                                 />
                                 <input 
                                     type="email" 
                                     placeholder="VOTRE EMAIL" 
                                     required 
-                                    className="form-input"
+                                    className="w-full bg-transparent border-b-2 border-borderDark py-4 text-xl md:text-2xl font-bold uppercase tracking-wide focus:outline-none focus:border-accent transition-colors"
                                 />
                             </div>
                             
@@ -621,12 +255,12 @@
                                 placeholder="VOTRE MESSAGE" 
                                 required 
                                 rows="3" 
-                                className="form-input"
+                                className="w-full bg-transparent border-b-2 border-borderDark py-4 text-xl md:text-2xl font-bold uppercase tracking-wide focus:outline-none focus:border-accent transition-colors resize-none"
                             ></textarea>
                             
                             <button 
                                 type="submit" 
-                                className="submit-btn"
+                                className="mt-8 border-2 border-white py-6 px-12 text-2xl font-black uppercase tracking-tighter hover:bg-white hover:text-black transition-colors md:self-end"
                             >
                                 ENVOYER LE MESSAGE
                             </button>
@@ -641,14 +275,12 @@
             const containerRef = useRef();
 
             useLayoutEffect(() => {
-                window.scrollTo(0, 0); // Reset scroll position 
+                window.scrollTo(0, 0);
                 const ctx = gsap.context(() => {
-                    // Animation d'entrée des informations de base
                     gsap.from(".proj-reveal", {
                         y: 50, opacity: 0, duration: 0.8, stagger: 0.1, ease: "power3.out"
                     });
                     
-                    // Apparition dynamique des images au scroll
                     gsap.utils.toArray('.proj-img').forEach(img => {
                         gsap.fromTo(img, 
                             { scale: 1.1, opacity: 0 },
@@ -665,3 +297,76 @@
             if (!project) return null;
 
             return (
+                <div ref={containerRef} className="min-h-screen bg-black pb-32">
+                    <button onClick={onClose} className="sticky top-0 z-50 mix-blend-difference bg-transparent text-white font-black uppercase text-xl p-6 md:p-10 hover:text-accent transition-colors flex items-center gap-4">
+                        <span>←</span> RETOUR
+                    </button>
+
+                    <div className="px-6 md:px-12 pb-12 border-b border-borderDark proj-reveal">
+                        <h1 className="text-[12vw] font-black uppercase leading-[0.85] tracking-tighter mb-6">{project.title}</h1>
+                        <div className="text-lg md:text-2xl font-medium text-neutral-500 uppercase">{project.headerTags}</div>
+                    </div>
+
+                    {/* Image Cover */}
+                    {project.images && project.images[0] && (
+                        <div className="p-6 md:p-12 border-b border-borderDark bg-[#0a0a0a] overflow-hidden">
+                            <img src={project.images[0]} alt={project.title} className="w-full border border-borderDark proj-img" />
+                        </div>
+                    )}
+
+                    {/* Section Contexte et Approche */}
+                    <div className="grid md:grid-cols-2 border-b border-borderDark">
+                        <div className="p-6 md:p-12 border-b md:border-b-0 md:border-r border-borderDark proj-reveal">
+                            <h3 className="text-2xl font-black uppercase mb-4">Le Contexte</h3>
+                            <p className="text-lg md:text-xl text-neutral-400 leading-relaxed">{project.context}</p>
+                        </div>
+                        <div className="p-6 md:p-12 proj-reveal">
+                            <h3 className="text-2xl font-black uppercase mb-4">L'Approche</h3>
+                            <p className="text-lg md:text-xl text-neutral-400 leading-relaxed">{project.approach}</p>
+                        </div>
+                    </div>
+
+                    {/* Reste des images intercalées avec les descriptions */}
+                    {project.images && project.images.slice(1).map((imgSrc, index) => (
+                        <React.Fragment key={index}>
+                            <div className="p-6 md:p-12 border-b border-borderDark bg-[#0a0a0a] overflow-hidden">
+                                <img src={imgSrc} alt={`${project.title} aperçu ${index + 1}`} className="w-full border border-borderDark bg-white proj-img" />
+                            </div>
+                            
+                            {/* Paragraphe optionnel sous l'image */}
+                            {project.descriptions && project.descriptions[index] && (
+                                <div className="p-8 md:p-16 border-b border-borderDark bg-black proj-reveal flex justify-center">
+                                    <p className="text-lg md:text-2xl font-medium text-neutral-300 leading-relaxed max-w-4xl text-center">
+                                        {project.descriptions[index]}
+                                    </p>
+                                </div>
+                            )}
+                        </React.Fragment>
+                    ))}
+                </div>
+            );
+        }
+
+        // --- COMPOSANT PRINCIPAL (APP) ---
+        function App() {
+            const [currentProjectId, setCurrentProjectId] = useState(null);
+
+            return (
+                <div className="antialiased selection:bg-accent selection:text-black">
+                    {currentProjectId === null ? (
+                        <LandingPage onOpenProject={setCurrentProjectId} />
+                    ) : (
+                        <ProjectView 
+                            project={projectsData[currentProjectId]} 
+                            onClose={() => setCurrentProjectId(null)} 
+                        />
+                    )}
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
