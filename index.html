@@ -284,4 +284,384 @@
             display: flex;
             align-items: center;
             gap: 1rem;
-            transition: color
+            transition: color 0.3s ease;
+            font-family: inherit;
+        }
+        .btn-back:hover {
+            color: var(--color-accent);
+        }
+
+        .project-detail-header {
+            padding: 0 var(--spacing-md) var(--spacing-lg) var(--spacing-md);
+            border-bottom: 1px solid var(--color-border);
+        }
+        .project-detail-title {
+            font-size: 12vw;
+            font-weight: 900;
+            text-transform: uppercase;
+            line-height: 0.85;
+            letter-spacing: -0.05em;
+            margin-bottom: var(--spacing-md);
+        }
+        .project-detail-tags {
+            font-size: 1.125rem;
+            font-weight: 500;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+        }
+
+        .project-img-wrapper {
+            padding: var(--spacing-md);
+            border-bottom: 1px solid var(--color-border);
+            background-color: var(--color-bg-card);
+            overflow: hidden; /* Prévient les débordements liés au GSAP scale */
+        }
+        .project-img-wrapper img {
+            width: 100%;
+            display: block;
+            border: 1px solid var(--color-border);
+            background-color: var(--color-text-main);
+        }
+
+        .project-context-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            border-bottom: 1px solid var(--color-border);
+        }
+        .context-block {
+            padding: var(--spacing-md);
+            border-bottom: 1px solid var(--color-border);
+        }
+        .context-block h3 {
+            font-size: 1.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: var(--spacing-sm);
+        }
+        .context-block p {
+            font-size: 1.125rem;
+            color: var(--color-text-muted);
+            line-height: 1.6;
+        }
+
+        .project-desc-wrapper {
+            padding: var(--spacing-lg) var(--spacing-md);
+            border-bottom: 1px solid var(--color-border);
+            background-color: var(--color-text-dark); /* Noir pur */
+            display: flex;
+            justify-content: center;
+        }
+        .project-desc-wrapper p {
+            font-size: 1.125rem;
+            font-weight: 500;
+            color: #d4d4d4;
+            line-height: 1.6;
+            max-width: 56rem;
+            text-align: center;
+        }
+
+        /* ==========================================================================
+           4. MEDIA QUERIES (RESPONSIVE)
+           Équivalent aux préfixes md: et lg: de Tailwind CSS.
+           ========================================================================== */
+        @media (min-width: 768px) {
+            .site-nav {
+                padding: var(--spacing-md) var(--spacing-md);
+                font-size: 0.875rem;
+            }
+            .marquee-header {
+                padding: var(--spacing-xl) 0;
+            }
+            .mission-section {
+                grid-template-columns: 1fr 2fr;
+                padding: var(--spacing-lg);
+            }
+            .mission-text {
+                font-size: 3rem;
+            }
+            .project-row-content {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                padding: var(--spacing-lg);
+            }
+            .project-title {
+                font-size: 6vw;
+            }
+            .project-meta {
+                text-align: right;
+                font-size: 1rem;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr 1fr; /* 2 colonnes pour les inputs texte */
+            }
+            .form-input {
+                font-size: 1.5rem;
+                padding: var(--spacing-sm) 0;
+            }
+            .submit-btn {
+                align-self: flex-end; /* Aligne le bouton de contact à droite sur grand écran */
+            }
+
+            .project-img-wrapper {
+                padding: var(--spacing-lg);
+            }
+            .project-context-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .context-block {
+                padding: var(--spacing-lg);
+                border-bottom: none; /* Enlève la ligne de séparation verticale sur le grid 2 colonnes */
+            }
+            .context-block:first-child {
+                border-right: 1px solid var(--color-border); /* Séparation entre la colonne 1 et 2 */
+            }
+            .context-block p {
+                font-size: 1.25rem;
+            }
+            .project-desc-wrapper p {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useLayoutEffect, useRef } = React;
+        
+        /* Les plugins GSAP doivent être enregistrés avant d'être utilisés */
+        gsap.registerPlugin(ScrollTrigger);
+
+        // --- DONNÉES DES PROJETS ---
+        const projectsData = {
+            edf: {
+                title: "EDF Particulier", year: "2024", tags: "Refonte UX/UI",
+                headerTags: "UX/UI Design • Design System • 2024",
+                context: "Refonte globale de l'espace client EDF. Un projet titanesque visant à simplifier la gestion des contrats d'énergie pour des millions d'utilisateurs.",
+                approach: "Ateliers de co-création, élaboration de parcours utilisateurs simplifiés et déploiement d'un Design System robuste.",
+                images: ["assets/edf-particulier/cover.png", "assets/edf-particulier/screen-mobile.png", "assets/edf-particulier/persona_user_journey.png"],
+                descriptions: [
+                    "Une déclinaison mobile pensée pour une consultation rapide et efficace des informations essentielles.",
+                    "Cartographie du parcours utilisateur et définition des personas pour cibler précisément les points de friction existants."
+                ]
+            },
+            raccordement: { 
+                title: "Portail Raccord.", year: "2024", tags: "Service Design", 
+                headerTags: "Service Design • 2024", 
+                context: "Digitalisation du processus de raccordement à l'électricité pour des consommateurs et producteurs.", 
+                approach: "Simplification B2B/B2C.", 
+                images: ["assets/edf-raccordement/cover.png", "assets/edf-raccordement/screen-desktop.png", "assets/edf-raccordement/screen-mobile.png"],
+                descriptions: [
+                    "Interface desktop permettant le suivi complexe des dossiers de raccordement avec des indicateurs d'état clairs.",
+                    "La version mobile permet aux utilisateurs et aux techniciens de suivre l'avancée du raccordement en temps réel depuis le terrain."
+                ]
+            },
+            clinique: {
+                title: "Clinique Ch.-Élysées", year: "2023", tags: "E-commerce • Luxe",
+                headerTags: "Refonte Web • Luxe • 2023",
+                context: "Repenser l'architecture de l'information pour optimiser les parcours de prise de rendez-vous sur un site générant plus de 300K visiteurs.",
+                approach: "Création d'un univers visuel premium (mobile-first) reflétant le positionnement haut de gamme.",
+                images: ["assets/clinique-champs-elysees/cover.png", "assets/clinique-champs-elysees/screen-desktop.png", "assets/clinique-champs-elysees/screen-desktop-2.png"],
+                descriptions: [
+                    "Des maquettes desktop mettant en valeur l'univers luxueux et épuré de la clinique à travers de larges visuels.",
+                    "Gabarit de page de présentation des soins, optimisé pour la lecture et la conversion avec un accès rapide à la prise de rendez-vous."
+                ]
+            },
+            typix: { 
+                title: "Typix", year: "2023", tags: "App Métier", 
+                headerTags: "App Métier • 2023", 
+                context: "Application métier impliquant 4 profils utilisateurs.", 
+                approach: "Optimisation de l'architecture.", 
+                images: ["assets/typix/cover.png", "assets/typix/screen-desktop.png", "assets/typix/screen-modale.png"],
+                descriptions: [
+                    "Tableau de bord principal offrant aux administrateurs une vue d'ensemble de l'activité.",
+                    "La gestion des interactions complexes s'effectue via des modales claires, pensées pour ne pas surcharger la navigation de l'utilisateur."
+                ]
+            },
+            avia: {
+                title: "Avia Picoty", year: "2022", tags: "Drive-to-store",
+                headerTags: "Digitalisation • Drive-to-store • 2022",
+                context: "Digitaliser le réseau de stations du groupe Avia afin d'améliorer le service en ligne des gestionnaires.",
+                approach: "Faciliter une démarche drive-to-store pour les clients finaux via un localisateur optimisé.",
+                images: ["assets/avia/cover.png", "assets/avia/screen-mobile.png"],
+                descriptions: [
+                    "Le localisateur de stations a été intégralement repensé pour les usages en mobilité afin de fluidifier l'expérience drive-to-store."
+                ]
+            }
+        };
+
+        // --- COMPOSANT : LANDING PAGE ---
+        function LandingPage({ onOpenProject }) {
+            const containerRef = useRef();
+
+            useLayoutEffect(() => {
+                const ctx = gsap.context(() => {
+                    // Animation d'entrée globale (Fade Up)
+                    gsap.from(".gsap-fade-up", {
+                        y: 100, opacity: 0, duration: 1, stagger: 0.1, ease: "power4.out", delay: 0.2
+                    });
+
+                    // Révélation au scroll (ScrollTrigger) pour les lignes de projets
+                    gsap.utils.toArray('.gsap-project-row').forEach((row) => {
+                        gsap.from(row, {
+                            scrollTrigger: {
+                                trigger: row, start: "top 90%", toggleActions: "play none none reverse"
+                            },
+                            opacity: 0, x: -50, duration: 0.6, ease: "power3.out"
+                        });
+                    });
+                }, containerRef);
+                return () => ctx.revert(); // Nettoyage au démontage du composant
+            }, []);
+
+            // Animations interactives 3D pour les lettres au survol
+            const handleMouseEnter = (e) => {
+                const chars = e.currentTarget.querySelectorAll('.char');
+                gsap.to(chars, {
+                    rotateX: 360,
+                    duration: 0.6,
+                    stagger: 0.03,
+                    ease: "back.out(1.5)",
+                    overwrite: "auto"
+                });
+            };
+
+            const handleMouseLeave = (e) => {
+                const chars = e.currentTarget.querySelectorAll('.char');
+                gsap.to(chars, {
+                    rotateX: 0,
+                    duration: 0.4,
+                    ease: "power2.out",
+                    overwrite: "auto"
+                });
+            };
+
+            const handleFormSubmit = (e) => {
+                e.preventDefault();
+                alert('Merci ! Votre message a bien été envoyé.');
+                e.target.reset();
+            };
+
+            return (
+                <div ref={containerRef} style={{ paddingBottom: '5rem' }}>
+                    <nav className="site-nav gsap-fade-up">
+                        <div>Charles Valentin</div>
+                        <div>Portfolio 22—25</div>
+                    </nav>
+
+                    <header className="marquee-header gsap-fade-up">
+                        <div className="marquee-content">
+                            <span className="marquee-text">
+                                UX/UI DESIGNER <span className="text-outline">CREATIVE</span> DIGITAL
+                            </span>
+                            <span className="marquee-text">
+                                UX/UI DESIGNER <span className="text-outline">CREATIVE</span> DIGITAL
+                            </span>
+                        </div>
+                    </header>
+
+                    <section className="mission-section">
+                        <div className="mission-label gsap-fade-up">Mission</div>
+                        <div className="mission-text gsap-fade-up">
+                            Je conçois des expériences digitales <span className="text-accent">innovantes</span>, fonctionnelles et centrées sur l'utilisateur. Transformer des problématiques complexes en interfaces évidentes.
+                        </div>
+                    </section>
+
+                    <main style={{ display: 'flex', flexDirection: 'column' }}>
+                        {Object.entries(projectsData).map(([id, project]) => (
+                            <article 
+                                key={id} 
+                                onClick={() => onOpenProject(id)}
+                                onMouseEnter={handleMouseEnter}
+                                onMouseLeave={handleMouseLeave}
+                                className="project-row gsap-project-row"
+                            >
+                                <div className="project-row-content">
+                                    <h2 className="project-title">
+                                        {project.title.split('').map((char, index) => (
+                                            <span key={index} className="char">
+                                                {char}
+                                            </span>
+                                        ))}
+                                    </h2>
+                                    <div className="project-meta">
+                                        {project.year}<br/>{project.tags}
+                                    </div>
+                                </div>
+                            </article>
+                        ))}
+                    </main>
+
+                    {/* FOOTER & FORMULAIRE DE CONTACT */}
+                    <footer className="contact-footer">
+                        <h2 className="contact-title gsap-fade-up">
+                            START A<br/><span className="text-accent">PROJECT.</span>
+                        </h2>
+                        
+                        <form onSubmit={handleFormSubmit} className="contact-form gsap-fade-up">
+                            <div className="form-grid">
+                                <input 
+                                    type="text" 
+                                    placeholder="VOTRE NOM" 
+                                    required 
+                                    className="form-input"
+                                />
+                                <input 
+                                    type="email" 
+                                    placeholder="VOTRE EMAIL" 
+                                    required 
+                                    className="form-input"
+                                />
+                            </div>
+                            
+                            <textarea 
+                                placeholder="VOTRE MESSAGE" 
+                                required 
+                                rows="3" 
+                                className="form-input"
+                            ></textarea>
+                            
+                            <button 
+                                type="submit" 
+                                className="submit-btn"
+                            >
+                                ENVOYER LE MESSAGE
+                            </button>
+                        </form>
+                    </footer>
+                </div>
+            );
+        }
+
+        // --- COMPOSANT : VUE PROJET ---
+        function ProjectView({ project, onClose }) {
+            const containerRef = useRef();
+
+            useLayoutEffect(() => {
+                window.scrollTo(0, 0); // Reset scroll position 
+                const ctx = gsap.context(() => {
+                    // Animation d'entrée des informations de base
+                    gsap.from(".proj-reveal", {
+                        y: 50, opacity: 0, duration: 0.8, stagger: 0.1, ease: "power3.out"
+                    });
+                    
+                    // Apparition dynamique des images au scroll
+                    gsap.utils.toArray('.proj-img').forEach(img => {
+                        gsap.fromTo(img, 
+                            { scale: 1.1, opacity: 0 },
+                            {
+                                scale: 1, opacity: 1, duration: 1.5, ease: "power2.out",
+                                scrollTrigger: { trigger: img, start: "top 80%" }
+                            }
+                        );
+                    });
+                }, containerRef);
+                return () => ctx.revert();
+            }, [project]);
+
+            if (!project) return null;
+
+            return (
