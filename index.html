@@ -112,7 +112,7 @@
                 headerTags: "App Métier • 2023", 
                 context: "Application métier impliquant 4 profils utilisateurs.", 
                 approach: "Optimisation de l'architecture.", 
-                images: ["assets/typix/cover.png", "assets/typix/screen-desktop.png", "assets/typix/screen-modale.png"],
+                images: ["assets/typix/cover.png", "assets/typix/screen-modale-2.png", "assets/typix/screen-desktop.png", "assets/typix/screen-modale.png"],
                 descriptions: [
                     "Tableau de bord principal offrant aux administrateurs une vue d'ensemble de l'activité.",
                     "La gestion des interactions complexes s'effectue via des modales claires, pensées pour ne pas surcharger la navigation de l'utilisateur."
@@ -310,7 +310,7 @@
                     {/* Image Cover */}
                     {project.images && project.images[0] && (
                         <div className="p-6 md:p-12 border-b border-borderDark bg-[#1C1C1C] overflow-hidden">
-                            <img src={project.images[0]} alt={project.title} className="w-full border border-borderDark proj-img" />
+                            <img src={project.images[0]} alt={project.title} className="w-full proj-img" />
                         </div>
                     )}
 
@@ -330,7 +330,7 @@
                     {project.images && project.images.slice(1).map((imgSrc, index) => (
                         <React.Fragment key={index}>
                             <div className="p-6 md:p-12 border-b border-borderDark bg-[#1C1C1C] overflow-hidden">
-                                <img src={imgSrc} alt={`${project.title} aperçu ${index + 1}`} className="w-full border border-borderDark bg-[#1C1C1C] proj-img" />
+                                <img src={imgSrc} alt={`${project.title} aperçu ${index + 1}`} className="w-full bg-[#1C1C1C] proj-img" />
                             </div>
                             
                             {/* Paragraphe optionnel sous l'image */}
