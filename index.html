@@ -3,54 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Charles Valentin — UX/UI React</title>
+    <title>Charles Valentin — UX/UI React (Pure CSS)</title>
 
     <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
     
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-
-    <script src="https://cdn.tailwindcss.com"></script>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
-                    colors: { accent: '#e0ff00', borderDark: '#333' }
-                }
-            }
-        }
-    </script>
-
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;800;900&display=swap" rel="stylesheet">
 
     <style>
-        body { background-color: #1C1C1C; color: #fff; overflow-x: hidden; }
-        
-        /* Marquee infini fluide */
-        .marquee-container { overflow: hidden; white-space: nowrap; }
-        .marquee-content { display: inline-block; animation: marquee 15s linear infinite; }
-        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-        .text-outline { color: transparent; -webkit-text-stroke: 2px #fff; }
+        /* ==========================================================================
+           1. VARIABLES (COLOR SWATCH & TYPOGRAPHY BASE)
+           Les variables CSS (Custom Properties) permettent de définir une valeur 
+           une seule fois et de la réutiliser. Si tu veux changer l'identité 
+           visuelle, tu n'as qu'à modifier ces lignes.
+           ========================================================================== */
+        :root {
+            /* --- Palette de couleurs (Color Swatch) --- */
+            --color-bg-main: #1C1C1C;      /* Fond principal du site (Gris très foncé) */
+            --color-bg-card: #0a0a0a;      /* Fond pour faire ressortir les images */
+            --color-text-main: #ffffff;    /* Texte principal (Blanc) */
+            --color-text-muted: #a3a3a3;   /* Texte secondaire/neutre (Gris clair) */
+            --color-text-dark: #000000;    /* Texte inversé (ex: texte sur le survol jaune) */
+            --color-accent: #e0ff00;       /* Couleur d'accentuation (Jaune fluo brutaliste) */
+            --color-border: #333333;       /* Couleur des lignes de séparation */
 
-        /* Effet de survol brutaliste global de la ligne */
-        .project-row { position: relative; overflow: hidden; }
-        .project-row::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: #fff; transform: scaleY(0); transform-origin: bottom;
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); z-index: 0;
+            /* --- Typographie --- */
+            --font-family-sans: 'Inter', sans-serif;
+            
+            /* --- Espacements standards --- */
+            --spacing-sm: 1rem;            /* 16px */
+            --spacing-md: 2rem;            /* 32px */
+            --spacing-lg: 4rem;            /* 64px */
+            --spacing-xl: 6rem;            /* 96px */
         }
-        .project-row:hover::before { transform: scaleY(1); transform-origin: top; }
-        .project-row-content { position: relative; z-index: 1; transition: transform 0.4s ease; }
-        .project-row:hover .project-row-content { transform: translateX(2vw); color: #000; }
 
-        /* Utilitaires pour l'animation 3D des lettres */
-        .project-title-wrapper {
-            perspective: 1000px;
+        /* ==========================================================================
+           2. RESET & GLOBAL STYLES
+           Réinitialisation des marges par défaut des navigateurs pour un rendu uni.
+           ========================================================================== */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--color-bg-main);
+            color: var(--color-text-main);
+            font-family: var(--font-family-sans);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Personnalisation de la sélection de texte globale */
+        ::selection {
+            background-color: var(--color-accent);
+            color: var(--color-text-dark);
+        }
+
+        /* ==========================================================================
+           3. LAYOUT & STRUCTURE
+           Classes sémantiques remplaçant l'approche utilitaire de Tailwind.
+           ========================================================================== */
+        
+        /* --- Navigation --- */
+        .site-nav {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--spacing-sm) var(--spacing-sm);
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        /* --- En-tête (Marquee) --- */
+        .marquee-header {
+            border-bottom: 1px solid var(--color-border);
+            padding: var(--spacing-lg) 0;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        .marquee-content {
+            display: inline-block;
+            animation: marquee 15s linear infinite;
+        }
+        @keyframes marquee { 
+            0% { transform: translateX(0); } 
+            100% { transform: translateX(-50%); } 
+        }
+        .marquee-text {
+            font-size: 12vw; /* Taille de police adaptative relative à la largeur d'écran */
+            font-weight: 900;
+            text-transform: uppercase;
+            line-height: 0.8;
+            letter-spacing: -0.05em;
+            padding-right: var(--spacing-md);
+        }
+        .text-outline {
+            color: transparent;
+            -webkit-text-stroke: 2px var(--color-text-main);
+        }
+
+        /* --- Section Mission --- */
+        .mission-section {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md);
+            border-bottom: 1px solid var(--color-border);
+        }
+        .mission-label {
+            font-size: 0.875rem;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+        .mission-text {
+            font-size: 1.5rem;
+            font-weight: 500;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+        }
+        .text-accent {
+            color: var(--color-accent);
+        }
+
+        /* --- Liste des Projets (Row) --- */
+        .project-row {
+            position: relative;
+            border-bottom: 1px solid var(--color-border);
+            cursor: pointer;
+            overflow: hidden; /* Empêche l'animation de fond de déborder */
+        }
+        /* Effet de remplissage de bas en haut au survol */
+        .project-row::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: var(--color-text-main);
+            transform: scaleY(0);
+            transform-origin: bottom;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 0;
+        }
+        .project-row:hover::before {
+            transform: scaleY(1);
+            transform-origin: top;
+        }
+        .project-row-content {
+            position: relative;
+            z-index: 1; /* Reste au-dessus de l'animation de fond */
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-md);
+            transition: transform 0.4s ease, color 0.4s ease;
+        }
+        .project-row:hover .project-row-content {
+            transform: translateX(2vw); /* Décale légèrement le texte vers la droite */
+            color: var(--color-text-dark);
+        }
+        .project-title {
+            font-size: 2.25rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -0.05em;
+            line-height: 1;
+            perspective: 1000px; /* Nécessaire pour l'animation 3D GSAP */
+        }
+        .project-meta {
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+        }
+        .project-row:hover .project-meta {
+            color: var(--color-text-dark); /* Assure la lisibilité au survol */
         }
         .char {
             display: inline-block;
@@ -58,315 +194,94 @@
             transform-origin: center center;
             white-space: pre;
         }
-        
-        /* Style du placeholder personnalisé pour le formulaire */
-        ::placeholder {
-            color: #666;
+
+        /* --- Formulaire de Contact --- */
+        .contact-footer {
+            padding: var(--spacing-xl) var(--spacing-md);
+            max-w-width: 1024px;
+            margin: 0 auto;
         }
-    </style>
-</head>
-<body>
-    <div id="root"></div>
-
-    <script type="text/babel">
-        const { useState, useEffect, useLayoutEffect, useRef } = React;
-        gsap.registerPlugin(ScrollTrigger);
-
-        // --- DONNÉES DES PROJETS (Triés par ordre chronologique et ajout des paragraphes) ---
-        const projectsData = {
-            edf: {
-                title: "EDF Particulier", year: "2024", tags: "Refonte UX/UI",
-                headerTags: "UX/UI Design • Design System • 2024",
-                context: "Refonte globale de l'espace client EDF. Un projet titanesque visant à simplifier la gestion des contrats d'énergie pour des millions d'utilisateurs.",
-                approach: "Ateliers de co-création, élaboration de parcours utilisateurs simplifiés et déploiement d'un Design System robuste.",
-                images: ["assets/edf-particulier/cover.png", "assets/edf-particulier/screen-mobile.png", "assets/edf-particulier/persona_user_journey.png"],
-                descriptions: [
-                    "Une déclinaison mobile pensée pour une consultation rapide et efficace des informations essentielles.",
-                    "Cartographie du parcours utilisateur et définition des personas pour cibler précisément les points de friction existants."
-                ]
-            },
-            raccordement: { 
-                title: "Portail Raccord.", year: "2024", tags: "Service Design", 
-                headerTags: "Service Design • 2024", 
-                context: "Digitalisation du processus de raccordement à l'électricité pour des consommateurs et producteurs.", 
-                approach: "Simplification B2B/B2C.", 
-                images: ["assets/edf-raccordement/cover.png", "assets/edf-raccordement/screen-desktop.png", "assets/edf-raccordement/screen-mobile.png"],
-                descriptions: [
-                    "Interface desktop permettant le suivi complexe des dossiers de raccordement avec des indicateurs d'état clairs.",
-                    "La version mobile permet aux utilisateurs et aux techniciens de suivre l'avancée du raccordement en temps réel depuis le terrain."
-                ]
-            },
-            clinique: {
-                title: "Clinique Ch.-Élysées", year: "2023", tags: "E-commerce • Luxe",
-                headerTags: "Refonte Web • Luxe • 2023",
-                context: "Repenser l'architecture de l'information pour optimiser les parcours de prise de rendez-vous sur un site générant plus de 300K visiteurs.",
-                approach: "Création d'un univers visuel premium (mobile-first) reflétant le positionnement haut de gamme.",
-                images: ["assets/clinique-champs-elysees/cover.png", "assets/clinique-champs-elysees/screen-desktop.png", "assets/clinique-champs-elysees/screen-desktop-2.png"],
-                descriptions: [
-                    "Des maquettes desktop mettant en valeur l'univers luxueux et épuré de la clinique à travers de larges visuels.",
-                    "Gabarit de page de présentation des soins, optimisé pour la lecture et la conversion avec un accès rapide à la prise de rendez-vous."
-                ]
-            },
-            typix: { 
-                title: "Typix", year: "2023", tags: "App Métier", 
-                headerTags: "App Métier • 2023", 
-                context: "Application métier impliquant 4 profils utilisateurs.", 
-                approach: "Optimisation de l'architecture.", 
-                images: ["assets/typix/cover.png", "assets/typix/screen-desktop.png", "assets/typix/screen-modale.png"],
-                descriptions: [
-                    "Tableau de bord principal offrant aux administrateurs une vue d'ensemble de l'activité.",
-                    "La gestion des interactions complexes s'effectue via des modales claires, pensées pour ne pas surcharger la navigation de l'utilisateur."
-                ]
-            },
-            avia: {
-                title: "Avia Picoty", year: "2022", tags: "Drive-to-store",
-                headerTags: "Digitalisation • Drive-to-store • 2022",
-                context: "Digitaliser le réseau de stations du groupe Avia afin d'améliorer le service en ligne des gestionnaires.",
-                approach: "Faciliter une démarche drive-to-store pour les clients finaux via un localisateur optimisé.",
-                images: ["assets/avia/cover.png", "assets/avia/screen-mobile.png"],
-                descriptions: [
-                    "Le localisateur de stations a été intégralement repensé pour les usages en mobilité afin de fluidifier l'expérience drive-to-store."
-                ]
-            }
-        };
-
-        // --- COMPOSANT : LANDING PAGE ---
-        function LandingPage({ onOpenProject }) {
-            const containerRef = useRef();
-
-            useLayoutEffect(() => {
-                const ctx = gsap.context(() => {
-                    gsap.from(".gsap-fade-up", {
-                        y: 100, opacity: 0, duration: 1, stagger: 0.1, ease: "power4.out", delay: 0.2
-                    });
-
-                    gsap.utils.toArray('.gsap-project-row').forEach((row) => {
-                        gsap.from(row, {
-                            scrollTrigger: {
-                                trigger: row, start: "top 90%", toggleActions: "play none none reverse"
-                            },
-                            opacity: 0, x: -50, duration: 0.6, ease: "power3.out"
-                        });
-                    });
-                }, containerRef);
-                return () => ctx.revert();
-            }, []);
-
-            const handleMouseEnter = (e) => {
-                const chars = e.currentTarget.querySelectorAll('.char');
-                gsap.to(chars, {
-                    rotateX: 360,
-                    duration: 0.6,
-                    stagger: 0.03,
-                    ease: "back.out(1.5)",
-                    overwrite: "auto"
-                });
-            };
-
-            const handleMouseLeave = (e) => {
-                const chars = e.currentTarget.querySelectorAll('.char');
-                gsap.to(chars, {
-                    rotateX: 0,
-                    duration: 0.4,
-                    ease: "power2.out",
-                    overwrite: "auto"
-                });
-            };
-
-            const handleFormSubmit = (e) => {
-                e.preventDefault();
-                alert('Merci ! Votre message a bien été envoyé.');
-                e.target.reset();
-            };
-
-            return (
-                <div ref={containerRef} className="pb-20">
-                    <nav className="flex justify-between p-4 md:p-8 text-xs md:text-sm font-medium uppercase tracking-widest border-b border-borderDark gsap-fade-up">
-                        <div>Charles Valentin</div>
-                        <div>Portfolio 22—25</div>
-                    </nav>
-
-                    <header className="border-b border-borderDark py-10 md:py-20 marquee-container gsap-fade-up">
-                        <div className="marquee-content whitespace-nowrap">
-                            <span className="text-[12vw] font-black uppercase leading-[0.8] tracking-tighter pr-8">
-                                UX/UI DESIGNER <span className="text-outline">CREATIVE</span> DIGITAL
-                            </span>
-                            <span className="text-[12vw] font-black uppercase leading-[0.8] tracking-tighter pr-8">
-                                UX/UI DESIGNER <span className="text-outline">CREATIVE</span> DIGITAL
-                            </span>
-                        </div>
-                    </header>
-
-                    <section className="grid grid-cols-1 md:grid-cols-3 gap-8 p-6 md:p-16 border-b border-borderDark">
-                        <div className="text-sm text-neutral-500 uppercase font-medium gsap-fade-up">Mission</div>
-                        <div className="md:col-span-2 text-2xl md:text-5xl font-medium leading-tight tracking-tight gsap-fade-up">
-                            Je conçois des expériences digitales <span className="text-accent">innovantes</span>, fonctionnelles et centrées sur l'utilisateur. Transformer des problématiques complexes en interfaces évidentes.
-                        </div>
-                    </section>
-
-                    <main className="flex flex-col">
-                        {Object.entries(projectsData).map(([id, project]) => (
-                            <article 
-                                key={id} 
-                                onClick={() => onOpenProject(id)}
-                                onMouseEnter={handleMouseEnter}
-                                onMouseLeave={handleMouseLeave}
-                                className="project-row border-b border-borderDark cursor-pointer gsap-project-row"
-                            >
-                                <div className="project-row-content flex flex-col md:flex-row justify-between md:items-center p-6 md:p-12 gap-4">
-                                    <h2 className="text-4xl md:text-[6vw] font-black uppercase tracking-tighter m-0 leading-none project-title-wrapper">
-                                        {project.title.split('').map((char, index) => (
-                                            <span key={index} className="char">
-                                                {char}
-                                            </span>
-                                        ))}
-                                    </h2>
-                                    <div className="text-sm md:text-base font-medium uppercase text-left md:text-right text-neutral-400">
-                                        {project.year}<br/>{project.tags}
-                                    </div>
-                                </div>
-                            </article>
-                        ))}
-                    </main>
-
-                    {/* FOOTER & FORMULAIRE DE CONTACT */}
-                    <footer className="py-24 md:py-40 px-6 max-w-5xl mx-auto">
-                        <h2 className="text-[10vw] font-black uppercase leading-[0.85] tracking-tighter mb-16 text-center gsap-fade-up">
-                            START A<br/><span className="text-accent">PROJECT.</span>
-                        </h2>
-                        
-                        <form onSubmit={handleFormSubmit} className="flex flex-col gap-10 gsap-fade-up">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                                <input 
-                                    type="text" 
-                                    placeholder="VOTRE NOM" 
-                                    required 
-                                    className="w-full bg-transparent border-b-2 border-borderDark py-4 text-xl md:text-2xl font-bold uppercase tracking-wide focus:outline-none focus:border-accent transition-colors"
-                                />
-                                <input 
-                                    type="email" 
-                                    placeholder="VOTRE EMAIL" 
-                                    required 
-                                    className="w-full bg-transparent border-b-2 border-borderDark py-4 text-xl md:text-2xl font-bold uppercase tracking-wide focus:outline-none focus:border-accent transition-colors"
-                                />
-                            </div>
-                            
-                            <textarea 
-                                placeholder="VOTRE MESSAGE" 
-                                required 
-                                rows="3" 
-                                className="w-full bg-transparent border-b-2 border-borderDark py-4 text-xl md:text-2xl font-bold uppercase tracking-wide focus:outline-none focus:border-accent transition-colors resize-none"
-                            ></textarea>
-                            
-                            <button 
-                                type="submit" 
-                                className="mt-8 border-2 border-white py-6 px-12 text-2xl font-black uppercase tracking-tighter hover:bg-white hover:text-black transition-colors md:self-end"
-                            >
-                                ENVOYER LE MESSAGE
-                            </button>
-                        </form>
-                    </footer>
-                </div>
-            );
+        .contact-title {
+            font-size: 10vw;
+            font-weight: 900;
+            text-transform: uppercase;
+            line-height: 0.85;
+            letter-spacing: -0.05em;
+            text-align: center;
+            margin-bottom: var(--spacing-lg);
+        }
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-lg);
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-lg);
+        }
+        .form-input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid var(--color-border);
+            padding: var(--spacing-sm) 0;
+            font-size: 1.25rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--color-text-main);
+            transition: border-color 0.3s ease;
+            font-family: inherit;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: var(--color-accent);
+        }
+        .form-input::placeholder {
+            color: #666; /* Spécifique pour le placeholder */
+        }
+        textarea.form-input {
+            resize: none;
+        }
+        .submit-btn {
+            background: transparent;
+            border: 2px solid var(--color-text-main);
+            color: var(--color-text-main);
+            padding: 1.5rem var(--spacing-lg);
+            font-size: 1.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -0.05em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: var(--spacing-md);
+            font-family: inherit;
+        }
+        .submit-btn:hover {
+            background: var(--color-text-main);
+            color: var(--color-text-dark);
         }
 
-        // --- COMPOSANT : VUE PROJET ---
-        function ProjectView({ project, onClose }) {
-            const containerRef = useRef();
-
-            useLayoutEffect(() => {
-                window.scrollTo(0, 0);
-                const ctx = gsap.context(() => {
-                    gsap.from(".proj-reveal", {
-                        y: 50, opacity: 0, duration: 0.8, stagger: 0.1, ease: "power3.out"
-                    });
-                    
-                    gsap.utils.toArray('.proj-img').forEach(img => {
-                        gsap.fromTo(img, 
-                            { scale: 1.1, opacity: 0 },
-                            {
-                                scale: 1, opacity: 1, duration: 1.5, ease: "power2.out",
-                                scrollTrigger: { trigger: img, start: "top 80%" }
-                            }
-                        );
-                    });
-                }, containerRef);
-                return () => ctx.revert();
-            }, [project]);
-
-            if (!project) return null;
-
-            return (
-                <div ref={containerRef} className="min-h-screen bg-black pb-32">
-                    <button onClick={onClose} className="sticky top-0 z-50 mix-blend-difference bg-transparent text-white font-black uppercase text-xl p-6 md:p-10 hover:text-accent transition-colors flex items-center gap-4">
-                        <span>←</span> RETOUR
-                    </button>
-
-                    <div className="px-6 md:px-12 pb-12 border-b border-borderDark proj-reveal">
-                        <h1 className="text-[12vw] font-black uppercase leading-[0.85] tracking-tighter mb-6">{project.title}</h1>
-                        <div className="text-lg md:text-2xl font-medium text-neutral-500 uppercase">{project.headerTags}</div>
-                    </div>
-
-                    {/* Image Cover */}
-                    {project.images && project.images[0] && (
-                        <div className="p-6 md:p-12 border-b border-borderDark bg-[#0a0a0a] overflow-hidden">
-                            <img src={project.images[0]} alt={project.title} className="w-full border border-borderDark proj-img" />
-                        </div>
-                    )}
-
-                    {/* Section Contexte et Approche */}
-                    <div className="grid md:grid-cols-2 border-b border-borderDark">
-                        <div className="p-6 md:p-12 border-b md:border-b-0 md:border-r border-borderDark proj-reveal">
-                            <h3 className="text-2xl font-black uppercase mb-4">Le Contexte</h3>
-                            <p className="text-lg md:text-xl text-neutral-400 leading-relaxed">{project.context}</p>
-                        </div>
-                        <div className="p-6 md:p-12 proj-reveal">
-                            <h3 className="text-2xl font-black uppercase mb-4">L'Approche</h3>
-                            <p className="text-lg md:text-xl text-neutral-400 leading-relaxed">{project.approach}</p>
-                        </div>
-                    </div>
-
-                    {/* Reste des images intercalées avec les descriptions */}
-                    {project.images && project.images.slice(1).map((imgSrc, index) => (
-                        <React.Fragment key={index}>
-                            <div className="p-6 md:p-12 border-b border-borderDark bg-[#0a0a0a] overflow-hidden">
-                                <img src={imgSrc} alt={`${project.title} aperçu ${index + 1}`} className="w-full border border-borderDark bg-white proj-img" />
-                            </div>
-                            
-                            {/* Paragraphe optionnel sous l'image */}
-                            {project.descriptions && project.descriptions[index] && (
-                                <div className="p-8 md:p-16 border-b border-borderDark bg-black proj-reveal flex justify-center">
-                                    <p className="text-lg md:text-2xl font-medium text-neutral-300 leading-relaxed max-w-4xl text-center">
-                                        {project.descriptions[index]}
-                                    </p>
-                                </div>
-                            )}
-                        </React.Fragment>
-                    ))}
-                </div>
-            );
+        /* --- Vue Projet (Détail) --- */
+        .project-view-container {
+            min-height: 100vh;
+            background-color: var(--color-text-dark); /* Noir pur */
+            padding-bottom: var(--spacing-xl);
         }
-
-        // --- COMPOSANT PRINCIPAL (APP) ---
-        function App() {
-            const [currentProjectId, setCurrentProjectId] = useState(null);
-
-            return (
-                <div className="antialiased selection:bg-accent selection:text-black">
-                    {currentProjectId === null ? (
-                        <LandingPage onOpenProject={setCurrentProjectId} />
-                    ) : (
-                        <ProjectView 
-                            project={projectsData[currentProjectId]} 
-                            onClose={() => setCurrentProjectId(null)} 
-                        />
-                    )}
-                </div>
-            );
-        }
-
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
-    </script>
-</body>
-</html>
+        .btn-back {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            mix-blend-mode: difference;
+            background: transparent;
+            color: var(--color-text-main);
+            font-weight: 900;
+            text-transform: uppercase;
+            font-size: 1.25rem;
+            padding: var(--spacing-md);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: color
