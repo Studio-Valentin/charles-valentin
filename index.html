@@ -131,27 +131,51 @@
                             },
                             opacity: 0, x: -50, duration: 0.6, ease: "power3.out"
                         });
-
-                        ScrollTrigger.create({
-                            trigger: row,
-                            start: "top center",
-                            end: "bottom center",
-                            onToggle: (self) => {
-                                if (window.innerWidth < 768) {
-                                const chars = row.querySelectorAll('.char');
-                                    if (self.isActive) {
-                                        row.classList.add('is-active');
-gsap.to(chars, { rotateX: 360, duration: 0.6, stagger: 0.02, ease: "back.out(1.5)",overwrite: true });
-                                    } else {
-                                        row.classList.remove('is-active');
-                                        gsap.to(chars, { rotateX: 0, duration: 0.4, ease: "power2.out", overwrite: true });
-                                    }
-                                }
-                            }
-                        });
                     });
                 }, containerRef);
-                return () => ctx.revert();
+
+                // Mobile : un seul listener qui active uniquement la row la plus proche du centre
+                let mobileCleanup = null;
+                if (window.innerWidth < 768) {
+                    const rows = Array.from(containerRef.current.querySelectorAll('.gsap-project-row'));
+                    let activeRow = null;
+                    let ticking = false;
+
+                    const checkActive = () => {
+                        const centerY = window.innerHeight / 2;
+                        let closestRow = null;
+                        let closestDist = Infinity;
+
+                        rows.forEach(row => {
+                            const rect = row.getBoundingClientRect();
+                            const dist = Math.abs((rect.top + rect.height / 2) - centerY);
+                            if (dist < closestDist) { closestDist = dist; closestRow = row; }
+                        });
+
+                        if (closestRow !== activeRow) {
+                            if (activeRow) {
+                                activeRow.classList.remove('is-active');
+                                gsap.to(activeRow.querySelectorAll('.char'), { rotateX: 0, duration: 0.3, ease: "power2.out", overwrite: true });
+                            }
+                            activeRow = closestRow;
+                            if (closestRow) {
+                                closestRow.classList.add('is-active');
+                                gsap.to(closestRow.querySelectorAll('.char'), { rotateX: 360, duration: 0.6, stagger: 0.02, ease: "back.out(1.5)", overwrite: true });
+                            }
+                        }
+                        ticking = false;
+                    };
+
+                    const onScroll = () => {
+                        if (!ticking) { requestAnimationFrame(checkActive); ticking = true; }
+                    };
+
+                    window.addEventListener('scroll', onScroll, { passive: true });
+                    checkActive(); // état initial
+                    mobileCleanup = () => window.removeEventListener('scroll', onScroll);
+                }
+
+                return () => { ctx.revert(); if (mobileCleanup) mobileCleanup(); };
             }, []);
 
             const handleMouseEnter = (e) => {
