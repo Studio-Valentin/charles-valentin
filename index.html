@@ -134,18 +134,17 @@
 
                         ScrollTrigger.create({
                             trigger: row,
-                            start: "top center+=100",
-                            end: "bottom center-=100",
+                            start: "top center",
+                            end: "bottom center",
                             onToggle: (self) => {
                                 if (window.innerWidth < 768) {
+                                const chars = row.querySelectorAll('.char');
                                     if (self.isActive) {
                                         row.classList.add('is-active');
-                                        const chars = row.querySelectorAll('.char');
-                                        gsap.to(chars, { rotateX: 360, duration: 0.6, stagger: 0.02, ease: "back.out(1.5)" });
+gsap.to(chars, { rotateX: 360, duration: 0.6, stagger: 0.02, ease: "back.out(1.5)",overwrite: true });
                                     } else {
                                         row.classList.remove('is-active');
-                                        const chars = row.querySelectorAll('.char');
-                                        gsap.to(chars, { rotateX: 0, duration: 0.4, ease: "power2.out" });
+                                        gsap.to(chars, { rotateX: 0, duration: 0.4, ease: "power2.out", overwrite: true });
                                     }
                                 }
                             }
