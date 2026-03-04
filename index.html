@@ -444,26 +444,38 @@
             );
         }
 
-        function Header({ onNavigate, projects }) {
+        /**
+         * Composant Header Mobile avec animations GSAP
+         */
+        function MobileHeader({ onNavigate, projects }) {
             const [isMenuOpen, setIsMenuOpen] = useState(false);
             const [isProjectsOpen, setIsProjectsOpen] = useState(false);
+            const menuRef = useRef();
+            const itemsRef = useRef([]);
 
-            useEffect(() => {
+            // Animation d'ouverture/fermeture GSAP
+            useLayoutEffect(() => {
                 if (isMenuOpen) {
-                    document.body.style.overflow = 'hidden';
-                } else {
-                    document.body.style.overflow = 'auto';
+                    const ctx = gsap.context(() => {
+                        // Animation du fond
+                        gsap.fromTo(".mobile-overlay", 
+                            { opacity: 0 }, 
+                            { opacity: 1, duration: 0.4, ease: "power2.out" }
+                        );
+                        // Animation des items en cascade
+                        gsap.fromTo(".mobile-nav-item", 
+                            { y: 30, opacity: 0 }, 
+                            { y: 0, opacity: 1, duration: 0.6, stagger: 0.1, ease: "power3.out", delay: 0.2 }
+                        );
+                    }, menuRef);
+                    return () => ctx.revert();
                 }
-                return () => document.body.style.overflow = 'auto';
             }, [isMenuOpen]);
 
-            const DownloadIcon = () => (
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block ml-2" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
-                </svg>
-            );
-            const BurgerIcon = () => (<svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>);
-            const CloseIcon = () => (<svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>);
+            useEffect(() => {
+                document.body.style.overflow = isMenuOpen ? 'hidden' : 'auto';
+                return () => document.body.style.overflow = 'auto';
+            }, [isMenuOpen]);
 
             const handleNav = (view, id = null) => {
                 onNavigate(view, id);
@@ -471,82 +483,96 @@
                 setIsProjectsOpen(false);
             };
 
+            const BurgerIcon = () => (<svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>);
+            const CloseIcon = () => (<svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>);
+
             return (
-                <header className="sticky top-0 z-50 bg-[#1C1C1C]/80 backdrop-blur-sm border-b border-borderDark">
-                    <div className="flex justify-between items-center p-4 md:p-6 max-w-screen-2xl mx-auto relative z-[60]">
-                        <div className="text-sm font-medium uppercase tracking-widest cursor-pointer hover:text-accent transition-colors" onClick={() => handleNav('landing')}>
+                <div className="md:hidden" ref={menuRef}>
+                    <div className="flex justify-between items-center p-4 relative z-[70] bg-[#1C1C1C]/80 backdrop-blur-sm border-b border-borderDark">
+                        <div className="text-sm font-medium uppercase tracking-widest cursor-pointer" onClick={() => handleNav('landing')}>
                             Charles Valentin
                         </div>
-                        
-                        <nav className="hidden md:flex items-center gap-8">
-                            <a href="#" onClick={(e) => { e.preventDefault(); handleNav('landing'); }} className="text-sm font-medium uppercase tracking-widest hover:text-accent transition-colors">Accueil</a>
-
-                            <div className="relative"
-                                 onMouseEnter={() => setIsProjectsOpen(true)}
-                                 onMouseLeave={() => setIsProjectsOpen(false)}>
-                                <button className="flex items-center gap-2 text-sm font-medium uppercase tracking-widest hover:text-accent transition-colors">
-                                   Projets
-                                   <span className={`transition-transform ${isProjectsOpen ? 'rotate-180' : ''}`}>▼</span>
-                                </button>
-                                {isProjectsOpen && (
-                                    <div className="absolute top-full left-0 border border-borderDark bg-[#1C1C1C] rounded-md py-2 w-64 z-50">
-                                        {Object.entries(projects).map(([id, project]) => (
-                                            <a key={id} href="#" onClick={(e) => { e.preventDefault(); handleNav('project', id); }} className="block px-4 py-2 text-sm text-white hover:bg-accent hover:text-black transition-colors">
-                                                {project.title}
-                                            </a>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-
-                            <a href="#" onClick={(e) => { e.preventDefault(); handleNav('about'); }} className="text-sm font-medium uppercase tracking-widest hover:text-accent transition-colors">À propos</a>
-
-                            <a href="assets/portfolio.pdf" download="Charles_Valentin_Portfolio.pdf" className="inline-flex items-center justify-center border-2 border-accent text-accent px-4 py-2 rounded-sm text-sm font-medium uppercase tracking-widest hover:bg-accent hover:text-black transition-colors">
-                                Portfolio <DownloadIcon />
-                            </a>
-                        </nav>
-
-                        <div className="md:hidden">
-                            <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="focus:outline-none">
-                                {isMenuOpen ? <CloseIcon /> : <BurgerIcon />}
-                            </button>
-                        </div>
+                        <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="focus:outline-none">
+                            {isMenuOpen ? <CloseIcon /> : <BurgerIcon />}
+                        </button>
                     </div>
 
                     {isMenuOpen && (
-                        <div className="md:hidden fixed inset-0 bg-[#1C1C1C] z-[55] flex flex-col pt-32 px-6 overflow-y-auto">
+                        <div className="mobile-overlay fixed inset-0 bg-black z-[60] flex flex-col pt-32 px-6 overflow-y-auto">
                             <nav className="flex flex-col gap-8 items-center text-center pb-10">
-                                <a href="#" onClick={(e) => { e.preventDefault(); handleNav('landing'); }} className="text-3xl font-black uppercase tracking-tighter hover:text-accent transition-colors">Accueil</a>
+                                <div className="mobile-nav-item">
+                                    <a href="#" onClick={(e) => { e.preventDefault(); handleNav('landing'); }} className="text-4xl font-black uppercase tracking-tighter hover:text-accent">Accueil</a>
+                                </div>
                                 
-                                <div className="w-full flex flex-col items-center">
-                                    <button 
-                                        onClick={() => setIsProjectsOpen(!isProjectsOpen)}
-                                        className="flex items-center justify-center gap-3 text-3xl font-black uppercase tracking-tighter hover:text-accent transition-colors w-full"
-                                    >
-                                        Projets
-                                        <span className={`transition-transform duration-300 ${isProjectsOpen ? 'rotate-180' : ''} text-xl`}>▼</span>
+                                <div className="mobile-nav-item w-full flex flex-col items-center">
+                                    <button onClick={() => setIsProjectsOpen(!isProjectsOpen)} className="flex items-center justify-center gap-3 text-4xl font-black uppercase tracking-tighter hover:text-accent w-full">
+                                        Projets <span className={`transition-transform duration-300 ${isProjectsOpen ? 'rotate-180' : ''} text-xl`}>▼</span>
                                     </button>
-                                    
+                                    <div className={`flex-col gap-5 mt-6 w-full overflow-hidden transition-all duration-500 ${isProjectsOpen ? 'max-h-[500px] opacity-100 flex' : 'max-h-0 opacity-0 hidden'}`}>
+                                        {Object.entries(projects).map(([id, project]) => (
+                                            <a key={id} href="#" onClick={(e) => { e.preventDefault(); handleNav('project', id); }} className="text-xl text-neutral-400 hover:text-white">{project.title}</a>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div className="mobile-nav-item">
+                                    <a href="#" onClick={(e) => { e.preventDefault(); handleNav('about'); }} className="text-4xl font-black uppercase tracking-tighter hover:text-accent">À propos</a>
+                                </div>
+
+                                <div className="mobile-nav-item mt-4">
+                                    <a href="assets/portfolio.pdf" download className="inline-flex items-center justify-center border-2 border-white text-white px-8 py-4 text-xl font-black uppercase tracking-tighter hover:bg-white hover:text-black">
+                                        Portfolio
+                                    </a>
+                                </div>
+                            </nav>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        /**
+         * Header Principal (Desktop + Appel Mobile)
+         */
+        function Header({ onNavigate, projects }) {
+            const [isProjectsOpen, setIsProjectsOpen] = useState(false);
+
+            const handleNav = (view, id = null) => {
+                onNavigate(view, id);
+                setIsProjectsOpen(false);
+            };
+
+            return (
+                <>
+                    <MobileHeader onNavigate={onNavigate} projects={projects} />
+
+                    <header className="hidden md:block sticky top-0 z-50 bg-[#1C1C1C]/80 backdrop-blur-sm border-b border-borderDark">
+                        <div className="flex justify-between items-center p-6 max-w-screen-2xl mx-auto">
+                            <div className="text-sm font-medium uppercase tracking-widest cursor-pointer hover:text-accent transition-colors" onClick={() => handleNav('landing')}>
+                                Charles Valentin
+                            </div>
+                            <nav className="flex items-center gap-8">
+                                <a href="#" onClick={(e) => { e.preventDefault(); handleNav('landing'); }} className="text-sm font-medium uppercase tracking-widest hover:text-accent">Accueil</a>
+                                <div className="relative" onMouseEnter={() => setIsProjectsOpen(true)} onMouseLeave={() => setIsProjectsOpen(false)}>
+                                    <button className="flex items-center gap-2 text-sm font-medium uppercase tracking-widest hover:text-accent">
+                                       Projets <span className={`transition-transform ${isProjectsOpen ? 'rotate-180' : ''}`}>▼</span>
+                                    </button>
                                     {isProjectsOpen && (
-                                        <div className="flex flex-col gap-4 mt-6">
+                                        <div className="absolute top-full left-0 border border-borderDark bg-[#1C1C1C] rounded-md py-2 w-64">
                                             {Object.entries(projects).map(([id, project]) => (
-                                                <a key={id} href="#" onClick={(e) => { e.preventDefault(); handleNav('project', id); }} className="text-xl text-neutral-400 hover:text-white transition-colors">
+                                                <a key={id} href="#" onClick={(e) => { e.preventDefault(); handleNav('project', id); }} className="block px-4 py-2 text-sm text-white hover:bg-accent hover:text-black">
                                                     {project.title}
                                                 </a>
                                             ))}
                                         </div>
                                     )}
                                 </div>
-
-                                <a href="#" onClick={(e) => { e.preventDefault(); handleNav('about'); }} className="text-3xl font-black uppercase tracking-tighter hover:text-accent transition-colors">À propos</a>
-
-                                <a href="assets/portfolio.pdf" download="Charles_Valentin_Portfolio.pdf" className="mt-4 inline-flex items-center justify-center border-2 border-white text-white px-8 py-4 text-xl font-black uppercase tracking-tighter hover:bg-white hover:text-black transition-colors">
-                                    Portfolio <DownloadIcon />
-                                </a>
+                                <a href="#" onClick={(e) => { e.preventDefault(); handleNav('about'); }} className="text-sm font-medium uppercase tracking-widest hover:text-accent">À propos</a>
+                                <a href="assets/portfolio.pdf" download className="border-2 border-accent text-accent px-4 py-2 text-sm font-medium uppercase hover:bg-accent hover:text-black transition-colors">Portfolio</a>
                             </nav>
                         </div>
-                    )}
-                </header>
+                    </header>
+                </>
             );
         }
 
