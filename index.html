@@ -286,11 +286,6 @@
 
             return (
                 <div ref={containerRef} className="pb-20">
-                    <nav className="flex justify-between p-4 md:p-8 text-xs md:text-sm font-medium uppercase tracking-widest border-b border-borderDark gsap-fade-up">
-                        <div>Charles Valentin</div>
-                        <div>Portfolio 22—25</div>
-                    </nav>
-
                     <header className="border-b border-borderDark py-10 md:py-20 marquee-container gsap-fade-up">
                         <div className="marquee-content whitespace-nowrap">
                             <span className="text-[12vw] font-black uppercase leading-[0.8] tracking-tighter pr-8">
@@ -425,21 +420,170 @@
             );
         }
 
+        function AboutPage() {
+            return (
+                <>
+                    <div className="min-h-screen flex flex-col items-center justify-center text-center px-6 py-24 md:py-20 gsap-fade-up">
+                        <div className="max-w-2xl mx-auto">
+                            <img 
+                                src="https://i.imgur.com/JgA4m4U.png" // Remplacez par l'URL de votre photo
+                                alt="Charles Valentin" 
+                                className="w-48 h-48 rounded-full mx-auto mb-8 border-4 border-accent"
+                            />
+                            <p className="text-2xl md:text-4xl font-medium leading-tight tracking-tight mt-16 mb-8">
+                                Bonjour, je suis Charles, un designer UX/UI passionné par la création d'expériences numériques intuitives et esthétiques, transformant des problématiques complexes en interfaces évidentes.
+                            </p>
+                            <blockquote className="text-xl md:text-2xl italic text-neutral-400 border-l-4 border-accent pl-6 my-12">
+                                "Le design n'est pas seulement ce à quoi ça ressemble et ce que l'on ressent. Le design est comment ça fonctionne."
+                                <cite className="block not-italic text-base text-neutral-500 mt-2">— Steve Jobs</cite>
+                            </blockquote>
+                        </div>
+                    </div>
+                    <ContactSection />
+                </>
+            );
+        }
+
+        function Header({ onNavigate, projects }) {
+            const [isMenuOpen, setIsMenuOpen] = useState(false);
+            const [isProjectsOpen, setIsProjectsOpen] = useState(false);
+
+            useEffect(() => {
+                if (isMenuOpen) {
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    document.body.style.overflow = 'auto';
+                }
+                return () => document.body.style.overflow = 'auto';
+            }, [isMenuOpen]);
+
+            const DownloadIcon = () => (
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block ml-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+            );
+            const BurgerIcon = () => (<svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>);
+            const CloseIcon = () => (<svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>);
+
+            const handleNav = (view, id = null) => {
+                onNavigate(view, id);
+                setIsMenuOpen(false);
+                setIsProjectsOpen(false);
+            };
+
+            return (
+                <header className="sticky top-0 z-50 bg-[#1C1C1C]/80 backdrop-blur-sm border-b border-borderDark">
+                    <div className="flex justify-between items-center p-4 md:p-6 max-w-screen-2xl mx-auto relative z-[60]">
+                        <div className="text-sm font-medium uppercase tracking-widest cursor-pointer hover:text-accent transition-colors" onClick={() => handleNav('landing')}>
+                            Charles Valentin
+                        </div>
+                        
+                        <nav className="hidden md:flex items-center gap-8">
+                            <a href="#" onClick={(e) => { e.preventDefault(); handleNav('landing'); }} className="text-sm font-medium uppercase tracking-widest hover:text-accent transition-colors">Accueil</a>
+
+                            <div className="relative"
+                                 onMouseEnter={() => setIsProjectsOpen(true)}
+                                 onMouseLeave={() => setIsProjectsOpen(false)}>
+                                <button className="flex items-center gap-2 text-sm font-medium uppercase tracking-widest hover:text-accent transition-colors">
+                                   Projets
+                                   <span className={`transition-transform ${isProjectsOpen ? 'rotate-180' : ''}`}>▼</span>
+                                </button>
+                                {isProjectsOpen && (
+                                    <div className="absolute top-full left-0 border border-borderDark bg-[#1C1C1C] rounded-md py-2 w-64 z-50">
+                                        {Object.entries(projects).map(([id, project]) => (
+                                            <a key={id} href="#" onClick={(e) => { e.preventDefault(); handleNav('project', id); }} className="block px-4 py-2 text-sm text-white hover:bg-accent hover:text-black transition-colors">
+                                                {project.title}
+                                            </a>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+
+                            <a href="#" onClick={(e) => { e.preventDefault(); handleNav('about'); }} className="text-sm font-medium uppercase tracking-widest hover:text-accent transition-colors">À propos</a>
+
+                            <a href="assets/portfolio.pdf" download="Charles_Valentin_Portfolio.pdf" className="inline-flex items-center justify-center border-2 border-accent text-accent px-4 py-2 rounded-sm text-sm font-medium uppercase tracking-widest hover:bg-accent hover:text-black transition-colors">
+                                Portfolio <DownloadIcon />
+                            </a>
+                        </nav>
+
+                        <div className="md:hidden">
+                            <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="focus:outline-none">
+                                {isMenuOpen ? <CloseIcon /> : <BurgerIcon />}
+                            </button>
+                        </div>
+                    </div>
+
+                    {isMenuOpen && (
+                        <div className="md:hidden fixed inset-0 bg-[#1C1C1C] z-[55] flex flex-col pt-32 px-6 overflow-y-auto">
+                            <nav className="flex flex-col gap-8 items-center text-center pb-10">
+                                <a href="#" onClick={(e) => { e.preventDefault(); handleNav('landing'); }} className="text-3xl font-black uppercase tracking-tighter hover:text-accent transition-colors">Accueil</a>
+                                
+                                <div className="w-full flex flex-col items-center">
+                                    <button 
+                                        onClick={() => setIsProjectsOpen(!isProjectsOpen)}
+                                        className="flex items-center justify-center gap-3 text-3xl font-black uppercase tracking-tighter hover:text-accent transition-colors w-full"
+                                    >
+                                        Projets
+                                        <span className={`transition-transform duration-300 ${isProjectsOpen ? 'rotate-180' : ''} text-xl`}>▼</span>
+                                    </button>
+                                    
+                                    {isProjectsOpen && (
+                                        <div className="flex flex-col gap-4 mt-6">
+                                            {Object.entries(projects).map(([id, project]) => (
+                                                <a key={id} href="#" onClick={(e) => { e.preventDefault(); handleNav('project', id); }} className="text-xl text-neutral-400 hover:text-white transition-colors">
+                                                    {project.title}
+                                                </a>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+
+                                <a href="#" onClick={(e) => { e.preventDefault(); handleNav('about'); }} className="text-3xl font-black uppercase tracking-tighter hover:text-accent transition-colors">À propos</a>
+
+                                <a href="assets/portfolio.pdf" download="Charles_Valentin_Portfolio.pdf" className="mt-4 inline-flex items-center justify-center border-2 border-white text-white px-8 py-4 text-xl font-black uppercase tracking-tighter hover:bg-white hover:text-black transition-colors">
+                                    Portfolio <DownloadIcon />
+                                </a>
+                            </nav>
+                        </div>
+                    )}
+                </header>
+            );
+        }
+
         function App() {
-            const [currentProjectId, setCurrentProjectId] = useState(null);
+            const [currentView, setCurrentView] = useState({ view: 'landing', id: null });
+
+            const handleNavigation = (view, id = null) => {
+                window.scrollTo(0, 0);
+                setCurrentView({ view, id });
+            };
+
+            const renderView = () => {
+                switch (currentView.view) {
+                    case 'project':
+                        return (
+                            <ProjectView 
+                                project={projectsData[currentView.id]} 
+                                projectId={currentView.id}
+                                onNavigate={(projectId) => handleNavigation('project', projectId)}
+                                onClose={() => handleNavigation('landing')} 
+                            />
+                        );
+                    case 'about':
+                        return <AboutPage />;
+                    case 'landing':
+                    default:
+                        return <LandingPage onOpenProject={(projectId) => handleNavigation('project', projectId)} />;
+                }
+            };
 
             return (
                 <div className="antialiased selection:bg-accent selection:text-black">
-                    {currentProjectId === null ? (
-                        <LandingPage onOpenProject={setCurrentProjectId} />
-                    ) : (
-                        <ProjectView 
-                            project={projectsData[currentProjectId]} 
-                            projectId={currentProjectId}
-                            onNavigate={setCurrentProjectId}
-                            onClose={() => setCurrentProjectId(null)} 
-                        />
-                    )}
+                    <Header 
+                        onNavigate={handleNavigation}
+                        projects={projectsData}
+                    />
+                    {renderView()}
                 </div>
             );
         }
