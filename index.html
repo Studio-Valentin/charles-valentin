@@ -498,7 +498,7 @@
                     </div>
 
                     {isMenuOpen && (
-                        <div className="mobile-overlay fixed inset-0 bg-black z-[60] flex flex-col pt-32 px-6 overflow-y-auto">
+                        <div className="mobile-overlay fixed inset-0 bg-[#1C1C1C] z-[60] flex flex-col pt-32 px-6 overflow-y-auto">
                             <nav className="flex flex-col gap-8 items-center text-center pb-10">
                                 <div className="mobile-nav-item">
                                     <a href="#" onClick={(e) => { e.preventDefault(); handleNav('landing'); }} className="text-4xl font-black uppercase tracking-tighter hover:text-accent">Accueil</a>
@@ -520,7 +520,7 @@
                                 </div>
 
                                 <div className="mobile-nav-item mt-4">
-                                    <a href="assets/portfolio.pdf" download className="inline-flex items-center justify-center border-2 border-white text-white px-8 py-4 text-xl font-black uppercase tracking-tighter hover:bg-white hover:text-black">
+                                    <a href="assets/portfolio.pdf" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center border-2 border-white text-white px-8 py-4 text-xl font-black uppercase tracking-tighter hover:bg-white hover:text-black">
                                         Portfolio
                                     </a>
                                 </div>
@@ -568,7 +568,7 @@
                                     )}
                                 </div>
                                 <a href="#" onClick={(e) => { e.preventDefault(); handleNav('about'); }} className="text-sm font-medium uppercase tracking-widest hover:text-accent">À propos</a>
-                                <a href="assets/portfolio.pdf" download className="border-2 border-accent text-accent px-4 py-2 text-sm font-medium uppercase hover:bg-accent hover:text-black transition-colors">Portfolio</a>
+                                <a href="assets/portfolio.pdf" target="_blank" rel="noopener noreferrer" className="border-2 border-accent text-accent px-4 py-2 text-sm font-medium uppercase hover:bg-accent hover:text-black transition-colors">Portfolio</a>
                             </nav>
                         </div>
                     </header>
