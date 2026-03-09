@@ -439,7 +439,7 @@
 
             return (
                 <div ref={containerRef} className="min-h-screen bg-[#1C1C1C]">
-                    <button onClick={onClose} className="sticky top-0 z-50 mix-blend-difference bg-transparent text-white font-black uppercase text-xl p-6 md:p-10 hover:text-accent transition-colors flex items-center gap-4">
+                    <button onClick={onClose} className="sticky top-[53px] md:top-[69px] z-40 mix-blend-difference bg-transparent text-white font-black uppercase text-xl p-6 md:p-10 hover:text-accent transition-colors flex items-center gap-4">
                         <span>←</span> RETOUR
                     </button>
 
@@ -506,7 +506,7 @@
                                 className="w-48 h-48 rounded-full mx-auto mb-8 border-4 border-accent"
                             />
                             <p className="text-2xl md:text-4xl font-medium leading-tight tracking-tight mt-16 mb-8">
-                                Bonjour, je suis Charles, un designer UX/UI passionné par la création d'expériences numériques intuitives et esthétiques, transformant des problématiques complexes en interfaces évidentes.
+                                Bonjour, je suis Charles. J'aide les entreprises à concevoir des produits digitaux clairs, intuitifs et performants. <br /> UX/UI designer depuis 2020, j'interviens auprès de start-up ou au sein de grand groupe pour créer des interfaces centrées utilisateur et orientées business.
                             </p>
                             <blockquote className="text-xl md:text-2xl italic text-neutral-400 border-l-4 border-accent pl-6 my-12">
                                 "Le design n'est pas seulement ce à quoi ça ressemble et ce que l'on ressent. Le design est comment ça fonctionne."
@@ -562,8 +562,8 @@
             const CloseIcon = () => (<svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>);
 
             return (
-                <div className="md:hidden" ref={menuRef}>
-                    <div className="flex justify-between items-center p-4 relative z-[70] bg-[#1C1C1C]/80 backdrop-blur-sm border-b border-borderDark">
+                <div className="md:hidden sticky top-0 z-[70]" ref={menuRef}>
+                    <div className="flex justify-between items-center p-4 relative z-[80] bg-[#1C1C1C]/80 backdrop-blur-sm border-b border-borderDark">
                         <div className="text-sm font-medium uppercase tracking-widest cursor-pointer" onClick={() => handleNav('landing')}>
                             Charles Valentin
                         </div>
