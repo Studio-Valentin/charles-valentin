@@ -75,44 +75,44 @@
             raccordement: { 
                 title: "Portail EDF", year: "2024", tags: "Service Design", 
                 headerTags: "Service Design • 2024", 
-                context: "Digitalisation du processus de raccordement à l'électricité pour des consommateurs et producteurs.", 
-                approach: "Simplification B2B/B2C.", 
+                context: "Pilotage de l'expérience utilisateur client et agent pour la digitalisation du raccordement au réseau électrique, de la phase de discovery à la livraison UI", 
+                approach: "Accompagnement de la transformation digitale d'EDF par une approche centrée utilisateur : de la co-conception de parcours complexes à la production d'interfaces responsives accessibles, en garantissant la cohérence du Design System.", 
                 images: ["assets/edf-raccordement/cover.png", "assets/edf-raccordement/screen-desktop.png", "assets/edf-raccordement/screen-mobile.png", "assets/edf-raccordement/cartographie.png"],
                 descriptions: [
-                    "Interface desktop permettant le suivi complexe des dossiers de raccordement avec des indicateurs d'état clairs.",
-                    "La version mobile permet aux utilisateurs et aux techniciens de suivre l'avancée du raccordement en temps réel depuis le terrain."
+                    "Recherche & Analyse : Exploration des besoins via des enquêtes et interviews, co-conception d'User Stories et définition des règles de gestion en synergie avec les métiers, PM et développeurs.",
+                    "Conception UI & Scalabilité : Design d'interfaces responsives, création de nouvelles fonctionnalités et enrichissement continu du Design System sous environnement Agile (Jira)."
                 ]
             },
             clinique: {
                 title: "Clinique Ch.-Élysées", year: "2023", tags: "E-commerce • Luxe",
                 headerTags: "Refonte Web • Luxe • 2023",
-                context: "Repenser l'architecture de l'information pour optimiser les parcours de prise de rendez-vous sur un site générant plus de 300K visiteurs.",
-                approach: "Création d'un univers visuel premium (mobile-first) reflétant le positionnement haut de gamme.",
+                context: "Refonte globale du site des cliniques des Champs-Élysées. Repenser l'identité de marque, la navigation et les parcours des plus de 300K visiteurs mensuels.",
+                approach: "Restructuration stratégique de l'architecture d'information et création d'une nouvelle identité visuelle mobile-first pour un site à fort trafic, avec une optimisation ciblée du parcours de conversion.",
                 images: ["assets/clinique-champs-elysees/cover.png", "assets/clinique-champs-elysees/screen-desktop-3.png", "assets/clinique-champs-elysees/screen-desktop.png", "assets/clinique-champs-elysees/screen-desktop-2.png"],
                 descriptions: [
-                    "Des maquettes desktop mettant en valeur l'univers luxueux et épuré de la clinique à travers de larges visuels.",
-                    "Gabarit de page de présentation des soins, optimisé pour la lecture et la conversion avec un accès rapide à la prise de rendez-vous."
+                    "Stratégie UX : Réalisation d'un audit de l'existant, validation des US et alignement des parcours utilisateurs avec les objectifs de croissance et les standards de l'univers du luxe et de la santé.",
+                    "Direction artistique : Définition d'un nouvel univers de marque (veille, moodboards) et conception d'interfaces haute-fidélité selon une approche mobile-first."
                 ]
             },
             typix: { 
                 title: "Pixalione", year: "2023", tags: "App Métier", 
                 headerTags: "App Métier • 2023", 
-                context: "Application métier impliquant 4 profils utilisateurs.", 
-                approach: "Optimisation de l'architecture.", 
+                context: "J'accompagne Pixalione depuis 2022 sur différentes applications. Typix est une application métier de gestion de commande impliquant divers profils utilisateurs et pour laquelle une optimisation UX et une refonte UI ont été réalisées.", 
+                approach: "Optimisation de l'outil par une approche analytique (audit UX) et collaborative (ateliers), aboutissant à une refonte UI complète et à la livraison d'un UI Kit structuré pour les développeurs. Suivi continu des évolutions de l'application (conception de nouvelles fonctionnalités).", 
                 images: ["assets/typix/cover.png", "assets/typix/screen-modale-2.png", "assets/typix/screen-desktop.png", "assets/typix/screen-modale.png"],
                 descriptions: [
-                    "Tableau de bord principal offrant aux administrateurs une vue d'ensemble de l'activité.",
-                    "La gestion des interactions complexes s'effectue via des modales claires, pensées pour ne pas surcharger la navigation de l'utilisateur."
+                    "Analyse & Optimisation UX : Réalisation d'un audit UX complet de l'existant pour identifier les points de friction et optimiser les parcours de gestion complexes.\n\nCo-conception & Structure : Animation d'ateliers avec les parties prenantes pour restructurer la navigation et définir l'architecture des nouvelles interfaces via du zoning.",
+                    "Design d'Interface & Delivery : Création des maquettes UI haute-fidélité et mise en place d’un UI Kit complet pour industrialiser le développement et garantir la cohérence multi-profils."
                 ]
             },
             avia: {
                 title: "Avia Picoty", year: "2022", tags: "Drive-to-store",
                 headerTags: "Digitalisation • Drive-to-store • 2022",
                 context: "Digitaliser le réseau de stations du groupe Avia afin d'améliorer le service en ligne des gestionnaires.",
-                approach: "Faciliter une démarche drive-to-store pour les clients finaux via un localisateur optimisé.",
+                approach: "Faciliter une démarche drive-to-store pour les clients finaux.",
                 images: ["assets/avia/cover.png", "assets/avia/screen-mobile.png", "assets/avia/screen-desktop.png"],
                 descriptions: [
-                    "Le localisateur de stations a été intégralement repensé pour les usages en mobilité afin de fluidifier l'expérience drive-to-store."
+                    "Compréhension des besoins et des motivations des utilisateurs au travers d’interviews et d’un audit concurentiel. Mise en place d'une navigation claire et création de parcours optimisés. Wireframing et design UI des maquettes"
                 ]
             }
         };
@@ -479,7 +479,7 @@
                             
                             {project.descriptions && project.descriptions[index] && (
                                 <div className="px-6 md:px-12 py-12 md:py-20 border-b border-borderDark bg-[#1C1C1C] proj-reveal">
-                                    <p className="text-lg md:text-xl text-neutral-400 leading-relaxed max-w-5xl">
+                                    <p className="text-lg md:text-xl text-neutral-400 leading-relaxed max-w-5xl whitespace-pre-line">
                                         {project.descriptions[index]}
                                     </p>
                                 </div>
